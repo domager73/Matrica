@@ -9,7 +9,7 @@ namespace Matrica
 {
     class Matrix
     {
-        public enum Filltype 
+        public enum Filltype
         {
             Zerro,
             Random
@@ -23,11 +23,11 @@ namespace Matrica
         public Matrix(int rows, int cols, Filltype filltype)
         {
             matrix = new double[rows, cols];
-            switch (filltype) 
+            switch (filltype)
             {
                 case Filltype.Zerro:
                     ClearMatrix();
-                    break; 
+                    break;
                 case Filltype.Random:
                     FillRandomValue(-10, 10);
                     break;
@@ -87,9 +87,30 @@ namespace Matrica
                 }
             }
         }
+
+        public double GetValue(int i, int j)
+        {
+            if (i < 0 || i > Rows - 1 || j < 0 || j > Cols - 1)
+            {
+                throw new ArgumentOutOfRangeException("Out of range exeption");
+            }
+
+            return matrix[i, j];
+        }
+
+        public void SetValue(int i, int j, double value)
+        {
+            if (i < 0 || i > Rows - 1 || j < 0 || j > Cols - 1)
+            {
+                throw new ArgumentOutOfRangeException("Out of range exeption");
+            }
+
+            matrix[i, j] = value;
+        }
         #endregion
 
         #region OverridMethods
+
         public override string ToString()
         {
             string outout = "";
@@ -124,8 +145,35 @@ namespace Matrica
             return mRes;
         }
 
+        public double this[int i, int j] 
+        {
+            set { this.SetValue(i, j, value); }
+            get  { return this.GetValue(i, j); }
+        }
+
         public static bool operator ==(Matrix m1, Matrix m2) => m1.CompareTo(m2) == 0;
         public static bool operator !=(Matrix m1, Matrix m2) => m1.CompareTo(m2) != 0;
+
+        public static bool operator >(Matrix m1, Matrix m2) => m1.CompareTo(m2) == 1;
+
+        public static bool operator <(Matrix m1, Matrix m2) => m1.CompareTo(m2) == -1;
+
+        public static bool operator >=(Matrix m1, Matrix m2) => m1.CompareTo(m2) >= 0;
+
+        public static bool operator <=(Matrix m1, Matrix m2) => m1.CompareTo(m2) <= 0;
+
+        public static Matrix operator ++(Matrix m) 
+        {
+            for (int i = 0; i < m.Rows; i++) 
+            {
+                for (int j = 0; j < m.Cols; j++) 
+                {
+                    m.matrix[i, j]++;
+                }
+            }
+
+            return m;
+        }
 
         #endregion
 
@@ -175,23 +223,23 @@ namespace Matrica
             throw new Exception("Sizes are not equal");
         }
 
-        public int CompareTo(Matrix m) 
+        public int CompareTo(Matrix m)
         {
             if (this.Cols != m.Cols || this.Rows != m.Rows)
             {
                 throw new Exception("Sizes are not equal");
             }
-            else 
+            else
             {
-                for (int i = 0; i < Rows; i++) 
+                for (int i = 0; i < Rows; i++)
                 {
-                    for (int j = 0; j < Cols; j++) 
+                    for (int j = 0; j < Cols; j++)
                     {
                         if (this.matrix[i, j] < m.matrix[i, j])
                         {
                             return -1;
                         }
-                        else if (this.matrix[i, j] > m.matrix[i, j]) 
+                        else if (this.matrix[i, j] > m.matrix[i, j])
                         {
                             return 1;
                         }
